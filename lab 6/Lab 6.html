@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Inventory System</title>
+      <link rel="stylesheet" href="Labby 6.css">
+</head>
+
+<body>
+
+    <h1>Product Inventory</h1>
+
+  <form id="productForm">
+
+      <label>Product Name:
+        <input type="text" id="productName" required>
+          </label>
+
+<br><br>
+
+      <label>Price:
+        <input type="number" id="productPrice" required>
+          </label>
+
+<br><br>
+
+      <label>Stock Quantity:
+        <input type="number" id="productStock" required>
+          </label>
+
+<br><br>
+
+      <button type="submit">Add Product</button>
+
+</form>
+
+<br>
+
+  <table>
+    <thead>
+      <tr>
+          <th>ID</th>
+          <th>Item Name</th>
+          <th>Price</th>
+          <th>Stock</th>
+     </tr>
+</thead>
+
+  <tbody id="tableBody"></tbody>
+</table>
+
+<script>
+
+  let inventory = [
+      { id: 1, name: "Milk", price: 50, stock: 20 },
+      { id: 2, name: "Bread", price: 30, stock: 15 },
+      { id: 3, name: "Rice", price: 60, stock: 40 },
+      { id: 4, name: "Eggs", price: 10, stock: 0 },
+      { id: 5, name: "Sugar", price: 45, stock: 25 }
+];
+
+    function stockStatus(stock) {
+      if (stock === 0) return "out-of-stock";
+      if (stock <= 20) return "low-stock";
+        return "normal-stock";
+}
+
+      function renderTable() {
+
+      let table = document.getElementById("tableBody");
+
+        table.innerHTML = "";
+
+        inventory.forEach(item => {
+          table.innerHTML += `
+          <tr>
+            <td>${item.id}</td>
+            <td>${item.name}</td>
+            <td>₱${item.price.toFixed(2)}</td>
+            <td class="${stockStatus(item.stock)}">${item.stock}</td>
+</tr>
+    `;
+  });
+
+}
+
+    renderTable();
+
+      document.getElementById("productForm").addEventListener("submit", function(e){
+        e.preventDefault();
+
+       inventory.push({
+      id: inventory.length + 1,
+      name: productName.value,
+      price: Number(productPrice.value),
+      stock: Number(productStock.value)
+  });
+
+  renderTable();
+  this.reset();
+});
+
+</script>
+
+</body>
+</html>
