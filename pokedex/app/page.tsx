@@ -6,20 +6,27 @@ export default function Home() {
   const [pokemonList, setPokemonList] = useState<any[]>([]);
   const [search, setSearch] = useState("");
 
-  useEffect(() => {
-    async function getData() {
-      const res = await fetch("https://pokeapi.co/api/v2/pokemon"); 
+useEffect(() => {
+  async function getData() {
+    try {
+      const res = await fetch("https://pokeapi.co/api/v2/pokemon");
       const data = await res.json();
 
-      data.results.forEach(async (item: any) => {
-        const detailRes = await fetch(item.url);
-        const details = await detailRes.json();
-        setPokemonList((currentList) => [...currentList, details]);
-      });
-    }
+      const pokemonDetails = await Promise.all(
+        data.results.map(async (item: any) => {
+          const detailRes = await fetch(item.url);
+          return await detailRes.json();
+        })
+      );
 
-    getData();
-  }, []);
+      setPokemonList(pokemonDetails);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  getData();
+}, []);
 
   return (
     <div style={{ backgroundColor: "gray", color: "white", minHeight: "100vh", padding: "20px", fontFamily: "sans-serif" }}>
